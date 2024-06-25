@@ -1,4 +1,4 @@
-package com.dubproductions.dequeproject.ui.theme
+package com.dubproductions.dequeproject.characters.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
