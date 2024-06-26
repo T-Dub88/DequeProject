@@ -1,5 +1,7 @@
 package com.dubproductions.dequeproject.characters.domain.repository
 
+import com.dubproductions.dequeproject.characters.domain.network.NetworkResult
+
 interface CharactersRepository {
-    suspend fun getCharactersList()
+    suspend fun getCharactersList(): NetworkResult
 }
