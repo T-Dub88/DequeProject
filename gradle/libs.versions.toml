@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.0"
+hiltAndroidGradlePlugin = "2.49"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -12,11 +13,12 @@ nav = "2.8.0-beta03"
 servialization = "1.6.3"
 hilt = "2.49"
 androidx-hilt = "1.2.0"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 moshi = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -34,8 +36,8 @@ viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "nav" }
 lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 kotlinx-serielization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "servialization" }
-hilt-android = { group = "com.android.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.android.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx-hilt" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
