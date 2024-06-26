@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -65,6 +70,13 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.kotlinx.serielization.json)
 
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.nav.compose)
+    kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
