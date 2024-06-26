@@ -5,11 +5,11 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CharactersScreen() {
-
+    
 }
 
 @Preview
 @Composable
 fun CharactersScreenPreview() {
-    
+
 }

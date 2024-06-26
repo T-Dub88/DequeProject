@@ -1,13 +1,15 @@
 package com.dubproductions.dequeproject.characters.data.repository
 
-import com.dubproductions.dequeproject.characters.data.remote.CharactersApi
+import com.dubproductions.dequeproject.characters.data.remote.CharactersApiService
 import com.dubproductions.dequeproject.characters.domain.repository.CharactersRepository
 
 class CharactersRepositoryImpl(
-    val charactersApi: CharactersApi
+    private val charactersApiService: CharactersApiService
 ) : CharactersRepository {
+
     override suspend fun getCharactersList() {
-        TODO("Not yet implemented")
+        val response = charactersApiService.getCharacters()
+        println(response.toString())
     }
 
 }
