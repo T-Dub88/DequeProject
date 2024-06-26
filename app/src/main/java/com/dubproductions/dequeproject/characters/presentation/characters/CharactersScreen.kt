@@ -14,13 +14,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,38 +35,61 @@ import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
 import com.dubproductions.dequeproject.characters.domain.model.Game
 import com.dubproductions.dequeproject.characters.domain.network.NetworkResult
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharactersScreen(
-    networkState: NetworkResult
+    networkState: NetworkResult,
+    onCardClicked: (id: String) -> Unit
 ) {
-    Column(
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Characters List")
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
 
-        when (networkState) {
-            is NetworkResult.Error -> {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Network loading error icon.",
-                    Modifier.size(75.dp)
-                )
-                networkState.errorMessage?.let {
-                    Text(
-                        text = it,
-                        fontSize = 20.sp
+        ) {
+
+            when (networkState) {
+                is NetworkResult.Error -> {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Network loading error icon.",
+                        Modifier.size(75.dp)
+                    )
+                    networkState.errorMessage?.let { message ->
+                        Text(
+                            text = message,
+                            fontSize = 20.sp
+                        )
+                    }
+                }
+                is NetworkResult.Loading -> {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-            }
-            is NetworkResult.Loading -> {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-            is NetworkResult.Success -> {
-                networkState.data?.let { CharacterListDisplay(characterList = it) }
+                is NetworkResult.Success -> {
+                    networkState.data?.let { characterList ->
+                        CharacterListDisplay(
+                            characterList = characterList,
+                            onCardClicked = onCardClicked
+                        )
+                    }
+                }
             }
         }
     }
@@ -69,7 +97,10 @@ fun CharactersScreen(
 }
 
 @Composable
-fun CharacterListDisplay(characterList: List<CharacterSummary>) {
+fun CharacterListDisplay(
+    characterList: List<CharacterSummary>,
+    onCardClicked: (id: String) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -78,7 +109,8 @@ fun CharacterListDisplay(characterList: List<CharacterSummary>) {
         items(characterList) {
             Card(
                 modifier = Modifier
-                    .padding(vertical = 5.dp)
+                    .padding(vertical = 5.dp),
+                onClick = { it.guid?.let { guid -> onCardClicked(guid) } }
             ) {
                 Column(
                     modifier = Modifier
@@ -120,7 +152,9 @@ private fun getGender(code: Int): String {
 @Preview(showBackground = true)
 @Composable
 fun CharactersScreenPreview() {
-    CharactersScreen(networkState = NetworkResult.Success(
+    CharactersScreen(
+        onCardClicked = {},
+        networkState = NetworkResult.Success(
         data = listOf(
             CharacterSummary(
                 deck = "This character does stuff",
