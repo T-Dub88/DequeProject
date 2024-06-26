@@ -12,6 +12,8 @@ nav = "2.8.0-beta03"
 servialization = "1.6.3"
 hilt = "2.49"
 androidx-hilt = "1.2.0"
+retrofit = "2.9.0"
+moshi = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +38,8 @@ hilt-android = { group = "com.android.dagger", name = "hilt-android", version.re
 hilt-compiler = { group = "com.android.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx-hilt" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

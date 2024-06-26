@@ -76,6 +76,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
 
+    // Retrofit and Moshi
+    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.moshi.kotlin)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
