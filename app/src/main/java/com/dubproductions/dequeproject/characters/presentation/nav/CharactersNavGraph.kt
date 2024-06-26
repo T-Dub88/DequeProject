@@ -1,7 +1,9 @@
 package com.dubproductions.dequeproject.characters.presentation.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,9 +28,9 @@ fun NavGraphBuilder.charactersScreen(
 ) {
     composable<NavRoutes.CharactersScreen> {
         val charactersViewModel = hiltViewModel<CharactersViewModel>()
-
+        val networkState by charactersViewModel.networkDataState.collectAsStateWithLifecycle()
         CharactersScreen(
-
+            networkState = networkState
         )
     }
 }
