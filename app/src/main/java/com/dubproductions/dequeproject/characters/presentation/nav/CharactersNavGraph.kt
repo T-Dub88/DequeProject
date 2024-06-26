@@ -1,7 +1,7 @@
 package com.dubproductions.dequeproject.characters.presentation.nav
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -25,7 +25,7 @@ fun NavGraphBuilder.charactersScreen(
     navController: NavHostController
 ) {
     composable<NavRoutes.CharactersScreen> {
-        val charactersViewModel = viewModel<CharactersViewModel>()
+        val charactersViewModel = hiltViewModel<CharactersViewModel>()
 
         CharactersScreen(
 
