@@ -26,10 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import com.dubproductions.dequeproject.R
 import com.dubproductions.dequeproject.characters.data.model.CharacterDetails
 import com.dubproductions.dequeproject.characters.domain.model.CharacterImage
 import com.dubproductions.dequeproject.characters.domain.model.Game
@@ -51,14 +53,14 @@ fun DetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Character Details")
+                    Text(stringResource(id = R.string.details_title))
                 },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back Button"
+                            contentDescription = stringResource(id = R.string.back_button)
                         )
                     }
                 }
@@ -79,7 +81,7 @@ fun DetailsScreen(
                 is ScreenState.Error -> {
                     Icon(
                         imageVector = Icons.Default.Info,
-                        contentDescription = "Network loading error icon.",
+                        contentDescription = stringResource(id = R.string.network_error_description),
                         Modifier.size(75.dp)
                     )
                     networkState.errorMessage?.let { message ->
@@ -117,7 +119,7 @@ fun CharacterDetailsDisplay(details: CharacterDetails) {
                 .align(Alignment.CenterHorizontally)
                 .padding(8.dp),
             model = details.image?.thumbUrl,
-            contentDescription = "Character's image.",
+            contentDescription = stringResource(id = R.string.character_image_description),
             loading = {
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -126,16 +128,61 @@ fun CharacterDetailsDisplay(details: CharacterDetails) {
             }
         )
 
-        Text(text = "Name: ${details.name}")
-        Text(text = "Last Name: ${details.lastName}")
-        Text(text = "Aliases: ${details.aliases}")
-        Text(text = "Real Name: ${details.realName}")
-        Text(text = "Gender: ${GenderCodes.getGender(details.gender ?: 0)}")
-        Text(text = "Birthday: ${details.birthday}")
-        Text(text = "First Appearance: ${details.firstGame?.name}")
-        Text(text = "Description: ${details.deck}")
+        Text(
+            text = stringResource(
+                id = R.string.character_name,
+                details.name ?: stringResource(id = R.string.unknown)
+            )
+        )
 
+        Text(
+            text = stringResource(
+                id = R.string.last_name,
+                details.lastName ?: stringResource(id = R.string.unknown)
+            )
+        )
 
+        Text(
+            text = stringResource(
+                id = R.string.aliases,
+                details.aliases ?: stringResource(id = R.string.unknown)
+            )
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.real_name,
+                details.realName ?: stringResource(id = R.string.unknown)
+            )
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.gender,
+                GenderCodes.getGender(details.gender ?: 0)
+            )
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.birthday,
+                details.birthday ?: stringResource(id = R.string.unknown)
+            )
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.first_game,
+                details.firstGame?.name ?: stringResource(id = R.string.unknown)
+            )
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.summary,
+                details.deck ?: stringResource(id = R.string.unknown)
+            )
+        )
 
     }
 }

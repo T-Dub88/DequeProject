@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">DequeProject</string>
+
+    <!--Screen Titles-->
+    <string name="list_title">Characters List</string>
+    <string name="details_title">Character Details</string>
+
+    <!--Character information-->
+    <string name="unknown">Unknown</string>
+    <string name="character_name">Name: %1$s</string>
+    <string name="gender">Gender: %1$s</string>
+    <string name="first_game">First Game: %1$s</string>
+    <string name="summary">Summary: %1$s</string>
+    <string name="last_name">Last Name: %1$s</string>
+    <string name="aliases">Aliases: %1$s</string>
+    <string name="real_name">Real Name: %1$s</string>
+    <string name="birthday">Birthday: %1$s</string>
+
+    <!--Content Descriptors-->
+    <string name="network_error_description">Network loading error icon.</string>
+    <string name="character_image_description">Characters image</string>
+    <string name="back_button">Back Button</string>
 </resources>

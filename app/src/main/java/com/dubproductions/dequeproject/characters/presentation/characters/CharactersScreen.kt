@@ -27,9 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import com.dubproductions.dequeproject.R
 import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
 import com.dubproductions.dequeproject.characters.presentation.utils.GenderCodes
 
@@ -47,7 +49,7 @@ fun CharactersScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Characters List")
+                    Text(stringResource(id = R.string.list_title))
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -69,7 +71,7 @@ fun CharactersScreen(
             } else if (screenState.errorMessage != null) {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = "Network loading error icon.",
+                    contentDescription = stringResource(id = R.string.network_error_description),
                     Modifier.size(75.dp)
                 )
                 Text(
@@ -124,7 +126,7 @@ fun CharacterListDisplay(
                             .align(Alignment.CenterHorizontally)
                             .width(200.dp),
                         model = characterList[i].image?.thumbUrl,
-                        contentDescription = "Character's Image",
+                        contentDescription = stringResource(id = R.string.character_image_description),
                         loading = {
                             CircularProgressIndicator(
                                 modifier = Modifier
@@ -132,10 +134,30 @@ fun CharacterListDisplay(
                             )
                         }
                     )
-                    Text(text = "Name: ${characterList[i].name}")
-                    Text(text = "Gender: ${GenderCodes.getGender(characterList[i].gender ?: 0)}")
-                    Text(text = "First Game: ${characterList[i].firstGame?.name}")
-                    Text(text = "Summary: ${characterList[i].deck}")
+                    Text(
+                        text = stringResource(
+                            id = R.string.character_name,
+                            characterList[i].name ?: stringResource(id = R.string.unknown)
+                        )
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.gender,
+                            GenderCodes.getGender(characterList[i].gender ?: 0)
+                        )
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.first_game,
+                            characterList[i].firstGame?.name ?: stringResource(id = R.string.unknown)
+                        )
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.summary,
+                            characterList[i].deck ?: stringResource(id = R.string.unknown)
+                        )
+                    )
                 }
             }
         }
