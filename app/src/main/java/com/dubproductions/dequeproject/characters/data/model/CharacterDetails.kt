@@ -9,7 +9,7 @@ data class CharacterDetails(
     val birthday: String? = null,
     val deck: String? = null,
     @Json(name = "first_appeared_in_game")
-    val firstGame: String? = null,
+    val firstGame: Game? = null,
     val games: List<Game>? = null,
     val gender: Int? = null,
     val guid: String? = null,

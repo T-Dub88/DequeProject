@@ -3,8 +3,7 @@ package com.dubproductions.dequeproject.characters.presentation.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dubproductions.dequeproject.characters.data.model.CharacterDetails
-import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
-import com.dubproductions.dequeproject.characters.domain.network.NetworkResult
+import com.dubproductions.dequeproject.characters.domain.network.ScreenState
 import com.dubproductions.dequeproject.characters.domain.repository.CharactersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -19,10 +18,10 @@ class DetailsViewModel @Inject constructor(
     private val charactersRepository: CharactersRepository
 ) : ViewModel() {
 
-    private val _networkDataState = MutableStateFlow<NetworkResult<CharacterDetails>>(NetworkResult.Loading())
+    private val _networkDataState = MutableStateFlow<ScreenState<CharacterDetails>>(ScreenState.Loading())
     val networkDataState = _networkDataState.asStateFlow()
 
-    private fun updateNetworkDataState(newState: NetworkResult<CharacterDetails>) {
+    private fun updateNetworkDataState(newState: ScreenState<CharacterDetails>) {
         _networkDataState.update {
             newState
         }
