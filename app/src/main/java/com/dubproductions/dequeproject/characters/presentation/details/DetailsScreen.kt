@@ -1,10 +1,13 @@
 package com.dubproductions.dequeproject.characters.presentation.details
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -64,7 +67,11 @@ fun DetailsScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(it),
+                .padding(it)
+                .scrollable(
+                    state = rememberScrollState(),
+                    orientation = Orientation.Vertical
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
