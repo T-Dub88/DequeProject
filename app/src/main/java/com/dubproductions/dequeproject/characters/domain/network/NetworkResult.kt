@@ -2,13 +2,13 @@ package com.dubproductions.dequeproject.characters.domain.network
 
 import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
 
-sealed class NetworkResult(
-    val data: List<CharacterSummary>? = null,
+sealed class NetworkResult<T>(
+    val data: T? = null,
     val errorMessage: String? = null
 ) {
-    class Success(data: List<CharacterSummary>) : NetworkResult(data)
-    class Loading : NetworkResult()
-    class Error(errorMessage: String) : NetworkResult(errorMessage = errorMessage)
+    class Success<T>(data: T) : NetworkResult<T>(data)
+    class Loading<T> : NetworkResult<T>()
+    class Error<T>(errorMessage: String) : NetworkResult<T>(errorMessage = errorMessage)
 }
 
 

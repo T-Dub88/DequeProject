@@ -1,7 +1,8 @@
-package com.dubproductions.dequeproject.characters.presentation.characters
+package com.dubproductions.dequeproject.characters.presentation.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dubproductions.dequeproject.characters.data.model.CharacterDetails
 import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
 import com.dubproductions.dequeproject.characters.domain.network.NetworkResult
 import com.dubproductions.dequeproject.characters.domain.repository.CharactersRepository
@@ -14,25 +15,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CharactersViewModel @Inject constructor(
+class DetailsViewModel @Inject constructor(
     private val charactersRepository: CharactersRepository
 ) : ViewModel() {
 
-    private val _networkDataState = MutableStateFlow<NetworkResult<List<CharacterSummary>>>(NetworkResult.Loading())
+    private val _networkDataState = MutableStateFlow<NetworkResult<CharacterDetails>>(NetworkResult.Loading())
     val networkDataState = _networkDataState.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            val result = async {
-                charactersRepository.getCharactersList()
-            }.await()
-            updateNetworkDataState(result)
+    private fun updateNetworkDataState(newState: NetworkResult<CharacterDetails>) {
+        _networkDataState.update {
+            newState
         }
     }
 
-    private fun updateNetworkDataState(newState: NetworkResult<List<CharacterSummary>>) {
-        _networkDataState.update {
-            newState
+    fun getCharacterDetails(id: String) {
+        viewModelScope.launch {
+            val result = async {
+                charactersRepository.getCharacterDetails(id)
+            }.await()
+
+            updateNetworkDataState(result)
         }
     }
 

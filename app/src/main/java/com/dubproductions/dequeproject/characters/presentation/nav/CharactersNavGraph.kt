@@ -12,6 +12,7 @@ import androidx.navigation.toRoute
 import com.dubproductions.dequeproject.characters.presentation.characters.CharactersScreen
 import com.dubproductions.dequeproject.characters.presentation.characters.CharactersViewModel
 import com.dubproductions.dequeproject.characters.presentation.details.DetailsScreen
+import com.dubproductions.dequeproject.characters.presentation.details.DetailsViewModel
 
 @Composable
 fun NavigationHost(navController: NavHostController) {
@@ -44,7 +45,13 @@ fun NavGraphBuilder.detailsScreen(
 ) {
     composable<NavRoutes.DetailsScreen> {
         val args = it.toRoute<NavRoutes.DetailsScreen>()
+        val detailsViewModel = hiltViewModel<DetailsViewModel>()
+        val networkState by detailsViewModel.networkDataState.collectAsStateWithLifecycle()
+
+        detailsViewModel.getCharacterDetails(args.characterId)
+
         DetailsScreen(
+            networkState = networkState,
             onBackPressed = {
                 navController.popBackStack()
             }
