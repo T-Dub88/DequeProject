@@ -1,6 +1,7 @@
 package com.dubproductions.dequeproject.characters.presentation.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,12 +31,13 @@ fun NavGraphBuilder.charactersScreen(
 ) {
     composable<NavRoutes.CharactersScreen> {
         val charactersViewModel = hiltViewModel<CharactersViewModel>()
-        val networkState by charactersViewModel.networkDataState.collectAsStateWithLifecycle()
+        val screenState by charactersViewModel.screenState.collectAsStateWithLifecycle()
         CharactersScreen(
-            networkState = networkState,
+            screenState = screenState,
             onCardClicked = {
                 navController.navigate(NavRoutes.DetailsScreen(it))
-            }
+            },
+            loadNewPage = { charactersViewModel.loadNextItems() }
         )
     }
 }
@@ -48,7 +50,9 @@ fun NavGraphBuilder.detailsScreen(
         val detailsViewModel = hiltViewModel<DetailsViewModel>()
         val networkState by detailsViewModel.networkDataState.collectAsStateWithLifecycle()
 
-        detailsViewModel.getCharacterDetails(args.characterId)
+        LaunchedEffect(args.characterId) {
+            detailsViewModel.getCharacterDetails(args.characterId)
+        }
 
         DetailsScreen(
             networkState = networkState,

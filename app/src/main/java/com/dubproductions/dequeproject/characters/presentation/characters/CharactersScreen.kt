@@ -3,12 +3,13 @@ package com.dubproductions.dequeproject.characters.presentation.characters
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -26,20 +27,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
-import com.dubproductions.dequeproject.characters.domain.model.CharacterImage
 import com.dubproductions.dequeproject.characters.domain.model.CharacterSummary
-import com.dubproductions.dequeproject.characters.domain.model.Game
-import com.dubproductions.dequeproject.characters.domain.network.NetworkResult
+import com.dubproductions.dequeproject.characters.presentation.utils.GenderCodes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharactersScreen(
-    networkState: NetworkResult,
-    onCardClicked: (id: String) -> Unit
+    screenState: CharactersScreenState,
+    onCardClicked: (id: String) -> Unit,
+    loadNewPage: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -63,33 +62,28 @@ fun CharactersScreen(
 
         ) {
 
-            when (networkState) {
-                is NetworkResult.Error -> {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "Network loading error icon.",
-                        Modifier.size(75.dp)
-                    )
-                    networkState.errorMessage?.let { message ->
-                        Text(
-                            text = message,
-                            fontSize = 20.sp
-                        )
-                    }
-                }
-                is NetworkResult.Loading -> {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-                is NetworkResult.Success -> {
-                    networkState.data?.let { characterList ->
-                        CharacterListDisplay(
-                            characterList = characterList,
-                            onCardClicked = onCardClicked
-                        )
-                    }
-                }
+            if (screenState.isLoadingInitialData) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            } else if (screenState.errorMessage != null) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Network loading error icon.",
+                    Modifier.size(75.dp)
+                )
+                Text(
+                    text = screenState.errorMessage,
+                    fontSize = 20.sp
+                )
+
+            } else {
+                CharacterListDisplay(
+                    characterList = screenState.characterList,
+                    onCardClicked = onCardClicked,
+                    screenState = screenState,
+                    loadNewPage = loadNewPage
+                )
             }
         }
     }
@@ -99,18 +93,25 @@ fun CharactersScreen(
 @Composable
 fun CharacterListDisplay(
     characterList: List<CharacterSummary>,
-    onCardClicked: (id: String) -> Unit
+    onCardClicked: (id: String) -> Unit,
+    screenState: CharactersScreenState,
+    loadNewPage: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
         contentPadding = PaddingValues(all = 10.dp)
     ) {
-        items(characterList) {
+        items(characterList.size) { i ->
+
+            if (i >= characterList.size - 1 && !screenState.endReached && !screenState.isLoadingNewPage) {
+                loadNewPage()
+            }
+
             Card(
                 modifier = Modifier
                     .padding(vertical = 5.dp),
-                onClick = { it.guid?.let { guid -> onCardClicked(guid) } }
+                onClick = { characterList[i].guid?.let { guid -> onCardClicked(guid) } }
             ) {
                 Column(
                     modifier = Modifier
@@ -122,8 +123,8 @@ fun CharacterListDisplay(
                             .clip(RoundedCornerShape(20.dp))
                             .align(Alignment.CenterHorizontally)
                             .width(200.dp),
-                        model = it.image?.thumbUrl,
-                        contentDescription = "Characters Image",
+                        model = characterList[i].image?.thumbUrl,
+                        contentDescription = "Character's Image",
                         loading = {
                             CircularProgressIndicator(
                                 modifier = Modifier
@@ -131,68 +132,26 @@ fun CharacterListDisplay(
                             )
                         }
                     )
-                    Text(text = "Name: ${it.name}")
-                    Text(text = "Gender: ${getGender(it.gender ?: 0)}")
-                    Text(text = "First Game: ${it.firstGame?.name}")
-                    Text(text = "Summary: ${it.deck}")
+                    Text(text = "Name: ${characterList[i].name}")
+                    Text(text = "Gender: ${GenderCodes.getGender(characterList[i].gender ?: 0)}")
+                    Text(text = "First Game: ${characterList[i].firstGame?.name}")
+                    Text(text = "Summary: ${characterList[i].deck}")
                 }
             }
         }
-    }
-}
 
-private fun getGender(code: Int): String {
-    return when(code) {
-        1 -> "Male"
-        2 -> "Female"
-        else -> "Other"
-    }
-}
+        item {
+            if (screenState.isLoadingNewPage) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
 
-@Preview(showBackground = true)
-@Composable
-fun CharactersScreenPreview() {
-    CharactersScreen(
-        onCardClicked = {},
-        networkState = NetworkResult.Success(
-        data = listOf(
-            CharacterSummary(
-                deck = "This character does stuff",
-                firstGame = Game(
-                    name = "Legends of this"
-                ),
-                gender = 1,
-                guid = "jfds",
-                name = "Tony The Tiger",
-                image = CharacterImage(
-                    thumbUrl = ""
-                )
-            ),
-            CharacterSummary(
-                deck = "This character does stuff",
-                firstGame = Game(
-                    name = "Legends of this"
-                ),
-                gender = 1,
-                guid = "jfds",
-                name = "Tony The Tiger",
-                image = CharacterImage(
-                    thumbUrl = ""
-                )
-            ),
-            CharacterSummary(
-                deck = "This character does stuff",
-                firstGame = Game(
-                    name = "Legends of this"
-                ),
-                gender = 1,
-                guid = "jfds",
-                name = "Tony The Tiger",
-                image = CharacterImage(
-                    thumbUrl = ""
-                )
-            )
-        )
-    )
-    )
+    }
 }
